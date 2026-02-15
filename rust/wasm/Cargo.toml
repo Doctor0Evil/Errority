@@ -1,0 +1,16 @@
+[package]
+name = "errority-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "Errority WASM bridge: expose the engine to JavaScript."
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wasm-bindgen = "0.2"
+errority-core = { path = "../core" }
+
+[features]
+default = []
