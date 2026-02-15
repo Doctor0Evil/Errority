@@ -1,0 +1,139 @@
+openapi: 3.0.0
+info:
+  title: Neuro‑EcoKarma Public API
+  version: 1.0.0
+paths:
+  /actions:
+    post:
+      summary: Submit an action event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [agent_id, timestamp, action_type]
+              properties:
+                agent_id:
+                  type: string
+                timestamp:
+                  type: string
+                  format: date-time
+                action_type:
+                  type: string
+                location_geom:
+                  type: string
+                  description: WKT or GeoJSON
+                metadata:
+                  type: object
+      responses:
+        '201':
+          description: Action event accepted
+  /masses:
+    post:
+      summary: Submit pollutant mass entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [event_id, pollutant_code, mass_kg, unit]
+              properties:
+                event_id:
+                  type: string
+                  format: uuid
+                pollutant_code:
+                  type: string
+                mass_kg:
+                  type: number
+                unit:
+                  type: string
+                source_ref:
+                  type: string
+      responses:
+        '201':
+          description: Mass entry accepted
+  /agents/{agent_id}/karma:
+    get:
+      summary: Get current Karma and role for an agent
+      parameters:
+        - in: path
+          name: agent_id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Karma information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  agent_id:
+                    type: string
+                  k_current:
+                    type: number
+                  role_level:
+                    type: string
+                  last_update:
+                    type: string
+                    format: date-time
+  /governance/check:
+    post:
+      summary: Check EcoAdmissible, KarmaAdmissible, and ActionAllowed
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [agent_id, projected_stressors, projected_k]
+              properties:
+                agent_id:
+                  type: string
+                projected_stressors:
+                  type: array
+                  items:
+                    type: number
+                projected_k:
+                  type: number
+      responses:
+        '200':
+          description: Governance decision
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  eco_admissible:
+                    type: boolean
+                  karma_admissible:
+                    type: boolean
+                  action_allowed:
+                    type: boolean
+  /restorative/apply:
+    post:
+      summary: Apply a restorative action and update Karma
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [agent_id, action_type, timestamp, details]
+              properties:
+                agent_id:
+                  type: string
+                action_type:
+                  type: string
+                  description: e.g., 'Cleanup_Event', 'Tree_Planting', 'Monitoring_Sponsorship'
+                timestamp:
+                  type: string
+                  format: date-time
+                details:
+                  type: object
+      responses:
+        '200':
+          description: Restorative action processed
