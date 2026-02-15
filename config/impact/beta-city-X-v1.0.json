@@ -1,0 +1,24 @@
+{
+  "jurisdiction": "City-X-District-1",
+  "version": "1.0.0",
+  "beta": [
+    {
+      "impact_code": "PM2.5",
+      "beta": 1.5,
+      "justification": "Higher vulnerability due to elevated asthma rates in district",
+      "sources": ["Local health department epidemiology report"]
+    },
+    {
+      "impact_code": "CO2e",
+      "beta": 1.0,
+      "justification": "Baseline global climate weight",
+      "sources": ["National climate policy baseline"]
+    },
+    {
+      "impact_code": "PLASTIC_MIS",
+      "beta": 2.0,
+      "justification": "Critical watershed and downstream ecological sensitivity",
+      "sources": ["Watershed vulnerability assessment"]
+    }
+  ]
+}
