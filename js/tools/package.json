@@ -1,0 +1,16 @@
+{
+  "name": "errority-tools",
+  "version": "0.1.0",
+  "private": true,
+  "bin": {
+    "errority-tool": "dist/errority-tool.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/errority-tool.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
