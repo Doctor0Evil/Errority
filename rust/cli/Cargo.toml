@@ -1,0 +1,9 @@
+[package]
+name = "errority-cli"
+version = "0.1.0"
+edition = "2021"
+description = "Errority CLI: transform any text into argument-based knowledge."
+license = "MIT"
+
+[dependencies]
+errority-core = { path = "../core" }
