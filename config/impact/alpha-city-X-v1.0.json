@@ -1,0 +1,10 @@
+{
+  "jurisdiction": "City-X-District-1",
+  "version": "1.0.0",
+  "alpha": [
+    {"impact_code": "CO2e", "alpha": 1.0, "source": "IPCC GWP100"},
+    {"impact_code": "PM2.5", "alpha": 1.0, "source": "Local LCIA method for PM2.5"},
+    {"impact_code": "PLASTIC_MIS", "alpha": 3.2, "source": "LCA meta-analysis for mismanaged plastic"},
+    {"impact_code": "GLASS_LITTER", "alpha": 1.0, "source": "Local litter impact study"}
+  ]
+}
