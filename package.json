@@ -1,0 +1,14 @@
+{
+  "name": "errority-monorepo",
+  "private": true,
+  "workspaces": [
+    "js/app",
+    "js/tools"
+  ],
+  "scripts": {
+    "build:wasm": "cd rust/wasm && wasm-pack build --target web --out-dir ../../js/app/public/wasm",
+    "build:app": "cd js/app && npm run build",
+    "build:tools": "cd js/tools && npm run build",
+    "build": "npm run build:wasm && npm run build:app && npm run build:tools"
+  }
+}
