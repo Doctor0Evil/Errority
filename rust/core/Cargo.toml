@@ -1,0 +1,8 @@
+[package]
+name = "errority-core"
+version = "0.1.0"
+edition = "2021"
+description = "Errority core: extract meaning and fair knowledge from any input."
+license = "MIT"
+
+[dependencies]
