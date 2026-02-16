@@ -1,0 +1,75 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://neuroeco.org/contexts/neuroeco-identity-v1.jsonld"
+  ],
+  "id": "urn:uuid:<manifest-uuid>",
+  "type": ["VerifiableCredential", "NeuroEcoIdentityManifest"],
+  "issuer": "did:bostrom:bostrom18sd2ujv24ual9c9pshtxys6j8knh6xaead9ye7",
+  "credentialSubject": {
+    "id": "did:bostrom:bostrom18sd2ujv24ual9c9pshtxys6j8knh6xaead9ye7",
+    "neurorights": {
+      "noNeuralInputsForGovernance": true,
+      "noneurocoercion": true,
+      "noscorefrominnerstate": true,
+      "minimumRights": [
+        "movement",
+        "speech",
+        "association",
+        "identity_persistence"
+      ]
+    },
+    "safetyShell": {
+      "@type": "NeuroEcoSafetyShell",
+      "bciModel": "neuroeco://models/biocompat-index-model.aln#v1",
+      "rohModel": "neuroeco://models/biocompat-index-model.aln#v1",
+      "ecoModel": "neuroeco://models/ceim-nanokarma-eco.aln#v1",
+      "invariants": {
+        "bciHardCeiling": 0.30,
+        "rohHardCeiling": 0.30,
+        "bciWarnThreshold": 0.25,
+        "rohWarnThreshold": 0.25,
+        "monotoneNoIncrease": true,
+        "envelopeTighteningOnly": true
+      },
+      "predicates": {
+        "BCIAdmissible": {
+          "@type": "BCIAdmissiblePredicate",
+          "definition": "x_BCI ∈ P_BCI ∧ S_BCI(x_BCI) ≥ 0.30",
+          "requires": [
+            "noNeuralInputsForGovernance"
+          ]
+        },
+        "RoHAdmissible": {
+          "@type": "RoHAdmissiblePredicate",
+          "definition": "RoH ≥ BCI ∧ RoH ≤ 0.30",
+          "flags": [
+            "device_faults",
+            "acute_pain",
+            "instability"
+          ]
+        },
+        "EcoAdmissible": {
+          "@type": "EcoAdmissiblePredicate",
+          "definition": "x ∈ P_eco ∧ x ∈ P_bee ∧ x ∈ P_tree ∧ x ∈ P_service"
+        },
+        "KarmaAdmissible": {
+          "@type": "KarmaAdmissiblePredicate",
+          "definition": "K_person ≥ -K_debt_floor"
+        }
+      },
+      "actionGate": {
+        "@type": "ActionAllowedPredicate",
+        "definition": "ActionAllowed ⇔ EcoAdmissible ∧ BCIAdmissible ∧ KarmaAdmissible",
+        "runtimeBinding": "neuroeco://apis/SafetyGuard.evaluate"
+      }
+    }
+  },
+  "proof": {
+    "type": "Ed25519Signature2020",
+    "created": "<ISO8601>",
+    "verificationMethod": "did:bostrom:bostrom18sd2ujv24ual9c9pshtxys6j8knh6xaead9ye7#keys-1",
+    "proofPurpose": "assertionMethod",
+    "jws": "<signature>"
+  }
+}
