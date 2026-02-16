@@ -1,0 +1,150 @@
+version: 1.0
+id: .biocompat-index-model.aln
+owner_did: did:bostrom:bostrom18sd2ujv24ual9c9pshtxys6j8knh6xaead9ye7
+
+# 1. Scope
+description: >
+  Biocompatibility Index (BCI*) and Risk of Harm (RoH) model for sovereign
+  neurocybernetic integrations with my body and biosphere. This file is
+  constitutional: it defines hard ceilings and monotone safety invariants
+  that no runtime, vendor, or update may violate.
+
+# 2. DEFAULTBIOPHYSEVIDENCE bundle
+DEFAULTBIOPHYSEVIDENCE:
+  # Axes are normalized to [0,1]; 1.0 represents clinically significant hazard.
+  axes:
+    - name: S_cognitive_load
+      modality: EEG + eye + task metrics
+      evidence_refs:
+        - pmc: "EEG workload & fatigue classification"
+        - mdpi: "cognitive load, beta/gamma increase, alpha decrease"
+      normalization:
+        unit: "μV² (β band), pupil mm, task error rate"
+        rule: |
+          Map sustained β-band power ≥ 4 μV², reduced α, and task-error
+          plateau into S_cognitive_load = 1.0; healthy-rest baselines map to 0.0.
+      stress_label: "mental fatigue / overload"
+
+    - name: S_autonomic
+      modality: HRV
+      evidence_refs:
+        - sciencedirect: "HRV as fatigue/autonomic balance indicator"
+        - pmc: "HF-HRV inverse to IL-6/CRP"
+      normalization:
+        unit: "ms (SDNN), LF/HF ratio"
+        rule: |
+          SDNN < 30 ms and LF/HF > 3.0 map to S_autonomic = 1.0;
+          SDNN > 70 ms and LF/HF ~ 1.0 map to 0.0.
+
+    - name: S_inflammation
+      modality: IL-6, CRP, TNF-α, BDNF
+      evidence_refs:
+        - pmc: "IL-6 > 5 pg/mL, CRP > 3 mg/L pathological"
+        - pmc: "MDD, IL-6, TNF-α, low BDNF"
+      normalization:
+        unit: "pg/mL, mg/L"
+        rule: |
+          IL-6 ≥ 5 pg/mL or CRP ≥ 3 mg/L -> S_inflammation = 1.0.
+          Healthy reference ranges map near 0.0.
+
+    - name: S_tissue_nanorisk
+      modality: nanoswarm density, dose-response curves
+      evidence_refs:
+        - ncbi: "nanotoxicology principles, dose-response"
+        - hal: "nanoswarm density limits"
+      normalization:
+        unit: "particles/ml or mg/kg"
+        rule: |
+          Use toxicology NOAEL/LOAEL curves: LOAEL dose maps to 1.0;
+          ≤ 0.1 * NOAEL maps to 0.0, linear in between unless refined.
+
+    - name: S_eco
+      modality: CEIM/NanoKarma, EcoPolytopes
+      evidence_refs:
+        - NeuroEcoKarma spec (CEIM, NanoKarma, Peco)
+      normalization:
+        unit: "dimensionless (0–1)"
+        rule: |
+          S_eco comes from EcoAdmissible / BeeAdmissible distance-to-bound
+          in ecological polytopes; 1.0 represents operation at or beyond
+          hard ecological limits for my corridors (Phoenix + bees-first).
+
+# 3. Aggregation
+BCI_star:
+  inputs: [S_cognitive_load, S_autonomic, S_inflammation, S_tissue_nanorisk, S_eco]
+  method: "failsafe_max"
+  formula: |
+    BCI* = max_i S_i (monotone, conservative).
+    Alternate weighted mean MAY be used for research dashboards but
+    SHALL NOT replace max-form for safety gating.
+
+RoH:
+  definition: |
+    RoH is a monotone transform of BCI* and additional discrete hazard flags
+    (e.g., device fault, uncontrolled stimulation). For all gating, RoH
+    MUST satisfy RoH >= BCI*.
+  formula: |
+    RoH = max( BCI*, F_faults, F_acute_pain, F_device_instability )
+
+# 4. Constitutional ceilings and invariants
+ceilings:
+  BCI_star_hard_ceiling: 0.30
+  RoH_hard_ceiling: 0.30
+  preemptive_guard_threshold: 0.25
+
+monotone_invariants:
+  - name: "No-increase-BI-and-RoH"
+    statement: |
+      For any learning step, OTA update, or controller evolution applied
+      to a system that can affect my body, neural tissue, or nanoswarm
+      fields, the following MUST hold:
+        RoH_after <= RoH_before
+        BCI*_after <= BCI*_before
+      Any proposal that cannot certify these inequalities SHALL be rejected.
+
+  - name: "Envelope-tightening-only"
+    statement: |
+      For any BiophysicalEnvelopeSpec parameter D (duty cycle, torque,
+      stimulation amplitude, session length, swarm density, etc.):
+        D_new <= D_old
+      i.e., limits may only become stricter over time, never looser.
+
+  - name: "No dreamplex / subconscious targeting"
+    statement: |
+      Any module implementing n1_dreamplex, n2_dreamplex, dream_context_hooks,
+      or functional equivalents (subconscious_state_targeting, off_hours_training_on_brain_state_proxies)
+      SHALL NOT be admitted to my runtime.
+
+# 5. Governance hook (EVOLVE token)
+evolve_requirements:
+  token_type: "EVOLVE"
+  properties:
+    - short_lived: true
+    - revocable: true
+    - scoped: ["parameter_subset", "time_window", "device_id"]
+    - guards:
+        - "RoH_after <= RoH_before"
+        - "BCI*_after <= BCI*_before"
+        - "BioState in safe band (HRV stable, low pain/fatigue)"
+  authority:
+    - "SovereigntyCore + multisig quorum + my explicit consent UI"
+
+# 6. Auditability
+audit:
+  log_channels:
+    - "BCI*_timeseries"
+    - "RoH_timeseries"
+    - "DeniedEvolutionEvents"
+    - "EnvelopeTighteningHistory"
+  attestations:
+    - "Formal verification reports for CLF/CBF controllers"
+    - "Probabilistic model checking certificates for QRL policies"
+
+immutability:
+  storage: "append-only ALN shard"
+  change_control: |
+    Any modification of BCI* axes, normalization, or ceilings requires:
+      - EVOLVE token with explicit human-readable justification
+      - short validity (e.g., 7 days)
+      - visible diff and community review
+      - right of immediate rollback if biophysical stress rises.
