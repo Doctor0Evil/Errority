@@ -1,28 +1,67 @@
 {
-  "$id": "https://neuro-eco.org/schemas/neurorights-policy.schema.json",
+  "$id": "https://bostrom.space/schemas/neurorights-policy.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Neurorights Policy Schema",
   "type": "object",
-  "required": ["policyId", "forbiddenModules", "forbiddenFunctions", "invariants"],
+  "required": ["version", "owner_did", "forbidden", "neurorights"],
   "properties": {
-    "policyId": { "type": "string" },
-    "forbiddenModules": {
-      "type": "array",
-      "items": { "type": "string" }
+    "version": { "type": "string" },
+    "owner_did": { "type": "string" },
+    "forbidden": {
+      "type": "object",
+      "required": ["modules", "functionalities"],
+      "properties": {
+        "modules": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [
+            "n1_dreamplex",
+            "n2_dreamplex",
+            "dream_context_hooks"
+          ]
+        },
+        "functionalities": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [
+            "subconscious_state_targeting",
+            "off_hours_training_on_brain_state_proxies",
+            "direct_affect_modulation_for_compliance",
+            "neuromarketing_on_brain_state",
+            "covert_sleep_stage_modulation"
+          ]
+        }
+      }
     },
-    "forbiddenFunctions": {
-      "type": "array",
-      "items": { "type": "string" }
-    },
-    "invariants": {
+    "neurorights": {
       "type": "object",
       "required": [
-        "noNeuralDataInGovernance",
-        "noSubconsciousTargeting",
-        "noInnerStateScoring"
+        "noNeuralInputsForGovernance",
+        "disallowedSanctions",
+        "minimumRights"
       ],
       "properties": {
-        "noNeuralDataInGovernance": { "type": "boolean", "const": true },
-        "noSubconsciousTargeting": { "type": "boolean", "const": true },
-        "noInnerStateScoring": { "type": "boolean", "const": true }
+        "noNeuralInputsForGovernance": { "type": "boolean" },
+        "disallowedSanctions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [
+            "neural_surveillance",
+            "neuromodulation_punitive",
+            "memory_edit",
+            "algorithmic_cognitive_scoring"
+          ]
+        },
+        "minimumRights": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [
+            "movement",
+            "speech",
+            "association",
+            "identity_persistence"
+          ]
+        }
       }
     }
   }
