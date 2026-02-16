@@ -1,0 +1,29 @@
+{
+  "$id": "https://neuro-eco.org/schemas/neurorights-policy.schema.json",
+  "type": "object",
+  "required": ["policyId", "forbiddenModules", "forbiddenFunctions", "invariants"],
+  "properties": {
+    "policyId": { "type": "string" },
+    "forbiddenModules": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "forbiddenFunctions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "invariants": {
+      "type": "object",
+      "required": [
+        "noNeuralDataInGovernance",
+        "noSubconsciousTargeting",
+        "noInnerStateScoring"
+      ],
+      "properties": {
+        "noNeuralDataInGovernance": { "type": "boolean", "const": true },
+        "noSubconsciousTargeting": { "type": "boolean", "const": true },
+        "noInnerStateScoring": { "type": "boolean", "const": true }
+      }
+    }
+  }
+}
