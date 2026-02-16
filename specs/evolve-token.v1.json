@@ -1,0 +1,38 @@
+{
+  "$id": "https://bostrom.space/specs/evolve-token.v1.json",
+  "title": "EVOLVE Token Specification v1",
+  "type": "object",
+  "required": ["token_id", "subject_did", "scope", "expires_at", "guards"],
+  "properties": {
+    "token_id": { "type": "string" },
+    "subject_did": { "type": "string" },
+    "scope": {
+      "type": "object",
+      "required": ["device_id", "parameters"],
+      "properties": {
+        "device_id": { "type": "string" },
+        "parameters": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "expires_at": { "type": "string", "format": "date-time" },
+    "guards": {
+      "type": "object",
+      "required": ["max_bci_star", "max_roh", "required_biostate"],
+      "properties": {
+        "max_bci_star": { "type": "number", "default": 0.25 },
+        "max_roh": { "type": "number", "default": 0.25 },
+        "required_biostate": {
+          "type": "object",
+          "properties": {
+            "min_hrv_sdnn": { "type": "number", "default": 40.0 },
+            "max_fatigue": { "type": "number", "default": 0.4 },
+            "max_pain": { "type": "number", "default": 0.3 }
+          }
+        }
+      }
+    }
+  }
+}
