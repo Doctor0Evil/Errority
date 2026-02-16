@@ -1,0 +1,47 @@
+{
+  "$id": "https://bostrom.space/schemas/biomech-integration-policy.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Biomech Integration Policy Schema",
+  "type": "object",
+  "required": ["module_id", "scope", "risk_class", "role", "limits"],
+  "properties": {
+    "module_id": { "type": "string" },
+    "scope": {
+      "type": "string",
+      "enum": ["observer", "advisor", "bounded-auto", "forbidden"]
+    },
+    "risk_class": {
+      "type": "string",
+      "enum": ["low", "medium", "high", "nanoswarm_invasive"]
+    },
+    "role": {
+      "type": "string",
+      "enum": ["observer", "advisor", "bounded-auto", "forbidden"]
+    },
+    "limits": {
+      "type": "object",
+      "required": [
+        "max_effect_size",
+        "max_updates_per_day",
+        "requires_evolve_token"
+      ],
+      "properties": {
+        "max_effect_size": { "type": "number" },
+        "max_updates_per_day": { "type": "integer" },
+        "requires_evolve_token": { "type": "boolean" },
+        "duty_cycle_max": { "type": "number" },
+        "session_length_max_minutes": { "type": "number" }
+      }
+    },
+    "bci_constraints": {
+      "type": "object",
+      "required": ["deny_above_threshold"],
+      "properties": {
+        "deny_above_threshold": {
+          "type": "number",
+          "default": 0.25
+        }
+      }
+    }
+  }
+}
