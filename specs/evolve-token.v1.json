@@ -1,38 +1,59 @@
 {
-  "$id": "https://bostrom.space/specs/evolve-token.v1.json",
-  "title": "EVOLVE Token Specification v1",
-  "type": "object",
-  "required": ["token_id", "subject_did", "scope", "expires_at", "guards"],
-  "properties": {
-    "token_id": { "type": "string" },
-    "subject_did": { "type": "string" },
-    "scope": {
-      "type": "object",
-      "required": ["device_id", "parameters"],
-      "properties": {
-        "device_id": { "type": "string" },
-        "parameters": {
-          "type": "array",
-          "items": { "type": "string" }
-        }
-      }
+  "$schema": "https://aln.neuroeco.org/schemas/evolve-token.v1.json",
+  "version": "1.0",
+  "token_id": "evolve-<UUID>",
+  "subject_did": "did:bostrom:bostrom18sd2ujv24ual9c9pshtxys6j8knh6xaead9ye7",
+  "issued_at": "<ISO8601>",
+  "expires_at": "<ISO8601-short-lived>",
+  "scope": {
+    "device_id": "neuroeco-device-<id>",
+    "parameters": [
+      "gait_profile",
+      "assistive_macro_set",
+      "prosthetic_gain"
+    ],
+    "role": "bounded-auto"
+  },
+  "guards": {
+    "max_bcistar": 0.30,
+    "warn_bcistar": 0.25,
+    "max_roh": 0.30,
+    "warn_roh": 0.25,
+    "required_biostate": {
+      "min_hrv_sdnn_ms": 50,
+      "max_fatigue_index": 0.5,
+      "max_pain_index": 0.3
     },
-    "expires_at": { "type": "string", "format": "date-time" },
-    "guards": {
-      "type": "object",
-      "required": ["max_bci_star", "max_roh", "required_biostate"],
-      "properties": {
-        "max_bci_star": { "type": "number", "default": 0.25 },
-        "max_roh": { "type": "number", "default": 0.25 },
-        "required_biostate": {
-          "type": "object",
-          "properties": {
-            "min_hrv_sdnn": { "type": "number", "default": 40.0 },
-            "max_fatigue": { "type": "number", "default": 0.4 },
-            "max_pain": { "type": "number", "default": 0.3 }
-          }
-        }
-      }
+    "eco_constraints": {
+      "require_eco_admissible": true,
+      "require_karma_admissible": true
     }
+  },
+  "neurorights": {
+    "no_neural_inputs_for_governance": true,
+    "forbidden_modules": [
+      "n1dreamplex",
+      "n2dreamplex",
+      "dreamcontexthooks"
+    ],
+    "forbidden_functionalities": [
+      "subconscious_state_targeting",
+      "offhours_training_on_brainstate_proxies",
+      "direct_affect_modulation_for_compliance",
+      "neuromarketing_on_brainstate",
+      "covert_sleep_stage_modulation"
+    ]
+  },
+  "audit": {
+    "policy_manifest": "neuroeco://policies/biomech-integration-policy.schema.json#v1",
+    "bci_model": "neuroeco://models/biocompat-index-model.aln#v1",
+    "eco_model": "neuroeco://models/ceim-nanokarma-eco.aln#v1"
+  },
+  "proof": {
+    "type": "Ed25519Signature2020",
+    "created": "<ISO8601>",
+    "verificationMethod": "did:bostrom:bostrom18sd2ujv24ual9c9pshtxys6j8knh6xaead9ye7#keys-1",
+    "proofPurpose": "assertionMethod",
+    "jws": "<signature>"
   }
 }
